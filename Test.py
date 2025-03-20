@@ -239,7 +239,9 @@ for region_name, hex_color in Colors.items():
 
             # Convert to SVG path
             path_data = "M " + " L ".join(f"{x},{y}" for x, y in polygon) + " Z"
-            svg_paths.append(f'<path d="{path_data}" fill="{hex_color}" stroke="black" stroke-width="1" data-name="{region_name}"/>')
+            svg_paths.append(f'<path d="{path_data}" fill="{hex_color}" stroke="black" stroke-width="0" data-name="{region_name}">'
+                 f'<title>{region_name}</title></path>')
+
 
 # Create GeoJSON FeatureCollection
 # geojson_data = geojson.FeatureCollection(geojson_features)
