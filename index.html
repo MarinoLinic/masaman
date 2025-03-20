@@ -1,0 +1,49 @@
+<canvas id="mapCanvas"></canvas>
+<p id="colorText">Hover over the image to see colors.</p>
+
+<script>
+	const canvas = document.getElementById('mapCanvas')
+	const ctx = canvas.getContext('2d')
+	const colorText = document.getElementById('colorText')
+
+	// Load the image
+	const img = new Image()
+	img.src = 'map.png' // Replace with your actual image path
+	img.onload = function () {
+		canvas.width = img.width
+		canvas.height = img.height
+		ctx.drawImage(img, 0, 0)
+	}
+
+	// Color name dictionary (extend as needed)
+	const colorNames = {
+		'255,0,0': 'Red',
+		'0,255,0': 'Green',
+		'0,0,255': 'Blue',
+		'255,255,0': 'Yellow',
+		'255,165,0': 'Orange',
+		'128,0,128': 'Purple',
+		'0,0,0': 'Black',
+		'255,255,255': 'White',
+		'192,192,192': 'Gray',
+	}
+
+	function rgbToName(r, g, b) {
+		const key = `${r},${g},${b}`
+		return colorNames[key] || `RGB(${r}, ${g}, ${b})`
+	}
+
+	// Get color on hover
+	canvas.addEventListener('mousemove', function (event) {
+		const rect = canvas.getBoundingClientRect()
+		const x = event.clientX - rect.left
+		const y = event.clientY - rect.top
+
+		const pixel = ctx.getImageData(x, y, 1, 1).data
+		const r = pixel[0],
+			g = pixel[1],
+			b = pixel[2]
+
+		colorText.textContent = `Color: ${rgbToName(r, g, b)}`
+	})
+</script>
