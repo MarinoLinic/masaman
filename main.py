@@ -182,9 +182,9 @@ Colors = {
     "Fiegian Mestizo": "#8a6f6c",
     "Metis": "#7f9793",
     "Dane-Inuit": "#bec1c5",
-    "Hispano-Mulatto": "#536258",
-    "Franco-Mulatto": "#46534a",
-    "Anglo-Mulatto": "#555555",
+    # "Hispano-Mulatto": "#536258",
+    # "Franco-Mulatto": "#46534a",
+    # "Anglo-Mulatto": "#555555",
     "Pardo": "#70877f",
     "Montubio": "#78a494",
     "Papiamento": "#4e7a61",
@@ -194,33 +194,58 @@ Colors = {
     "Malagasy": "#849146",
     "Other": "#3c463f",
     # Map
-    "Country Border": "#0f1719",
+    # "Country Border": "#0f1719",
     "": "#",
     }
 
-# Open the image
-image = Image.open("map.png")
+def filter_image(input_path, output_path, allowed_colors):
+    # Open the image
+    image = Image.open(input_path).convert("RGBA")
+    pixels = image.load()
+    width, height = image.size
+    
+    # Convert allowed colors to a set for faster lookup
+    allowed_hex = set(color.lower() for color in allowed_colors.values())
+    
+    for x in range(width):
+        for y in range(height):
+            r, g, b, a = pixels[x, y]
+            hex_color = f"#{r:02x}{g:02x}{b:02x}".lower()
+            
+            # If color is not in the allowed list, make it transparent
+            if hex_color not in allowed_hex:
+                pixels[x, y] = (0, 0, 0, 0)  # Transparent pixel
+    
+    # Save the new image
+    image.save(output_path, "PNG")
 
-# Convert image to RGB mode (in case it's not)
-image = image.convert("RGB")
-
-# Get all pixels as a list
-pixels = list(image.getdata())
-
-# Convert pixels to hex
-hex_pixels = [f"#{r:02x}{g:02x}{b:02x}" for r, g, b in pixels]
-
-# Save hex pixels to a text file
-with open("hex_pixels.txt", "w") as f:
-    for hex_color in hex_pixels:
-        f.write(f"{hex_color}\n")
-
-# Get unique colors
-# unique_colors = list(set(pixels))
-
-# Get unique colors and convert them to hex
-unique_hex_colors = list(set(f"#{r:02x}{g:02x}{b:02x}" for r, g, b in pixels))
+filter_image("old-map.png", "filtered_map.png", Colors)
 
 
-# Print the unique colors
-print(unique_hex_colors)
+
+# # Open the image
+# image = Image.open("map.png")
+
+# # Convert image to RGB mode (in case it's not)
+# image = image.convert("RGB")
+
+# # Get all pixels as a list
+# pixels = list(image.getdata())
+
+# # Convert pixels to hex
+# hex_pixels = [f"#{r:02x}{g:02x}{b:02x}" for r, g, b in pixels]
+
+# # Save hex pixels to a text file
+# with open("hex_pixels.txt", "w") as f:
+#     for hex_color in hex_pixels:
+#         f.write(f"{hex_color}\n")
+
+# # Get unique colors
+# # unique_colors = list(set(pixels))
+
+# # Get unique colors and convert them to hex
+# unique_hex_colors = list(set(f"#{r:02x}{g:02x}{b:02x}" for r, g, b in pixels))
+
+
+# # Print the unique colors
+# print(unique_hex_colors)
