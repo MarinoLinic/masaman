@@ -4,6 +4,21 @@ from PIL import Image
 from shapely.geometry import Polygon, mapping
 import geojson
 
+Ina = {
+    "Russia": "#8000ff",
+    "United Kingdom": "#d75254",
+    "Portugal": "#339933",
+    "Spain": "#cccc33",
+    "Netherlands": "#ff903a",
+    "Belgium": "#6699cc",
+    "United States": "#cc66cc",
+    "Italy": "#00ff00",
+    "Germany": "#804000",
+    "Turkey": "#808080",
+    "France": "#0000ff",
+    "None": "#b9b9b9",
+}
+
 Colors = {
     # European / Northwest Eurasian
     "Franco": "#008db5",
@@ -250,7 +265,18 @@ for region_name, hex_color in Colors.items():
 # print("GeoJSON file saved as map_data.geojson")
 
 # Save SVG
-svg_content = f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">\n' + "\n".join(svg_paths) + "\n</svg>"
+# CSS for hover effect (lightens color on hover)
+svg_style = """
+<style>
+    path:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+</style>
+"""
+
+svg_content = f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">\n{svg_style}\n' + "\n".join(svg_paths) + "\n</svg>"
+
 with open("map_data.svg", "w") as f:
     f.write(svg_content)
 print("SVG file saved as map_data.svg")
