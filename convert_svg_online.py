@@ -10,7 +10,7 @@ def color_distance(c1, c2):
     """Calculate Euclidean distance between two RGB colors."""
     return sum((a - b) ** 2 for a, b in zip(c1, c2)) ** 0.5
 
-def find_nearest_color(target_hex, color_dict, threshold=15):  # ~0.1% in 8-bit color scale
+def find_nearest_color(target_hex, color_dict, threshold=5):  # ~0.1% in 8-bit color scale
     """Find the closest matching color in the dictionary within a given threshold."""
     target_rgb = hex_to_rgb(target_hex)
     for name, hex_color in color_dict.items():
@@ -51,6 +51,22 @@ def modify_svg(input_file, output_file, color_dict):
         file.write(svg_content)
 
     print(f"Updated SVG saved as {output_file}")
+
+
+Ina = {
+    "Russia": "#8000ff",
+    "United Kingdom": "#d75254",
+    "Portugal": "#339933",
+    "Spain": "#cccc33",
+    "Netherlands": "#ff903a",
+    "Belgium": "#6699cc",
+    "United States": "#cc66cc",
+    "Italy": "#00ff00",
+    "Germany": "#804000",
+    "Turkey": "#808080",
+    "France": "#0000ff",
+    "None": "#b9b9b9",
+}
 
 # Example usage
 Colors = {
@@ -249,4 +265,4 @@ Colors = {
     # Map
     "Country Border": "#0f1719",
 }
-modify_svg('very-detailed.svg', 'very-detailed-interactive.svg', Colors)
+modify_svg('ina1.svg', 'ina1-2.svg', Ina)
