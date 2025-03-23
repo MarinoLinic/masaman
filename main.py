@@ -1,20 +1,5 @@
 from PIL import Image
 
-Ina = {
-    "Russia": "#8000ff",
-    "United Kingdom": "#d75254",
-    "Portugal": "#339933",
-    "Spain": "#cccc33",
-    "Netherlands": "#ff903a",
-    "Belgium": "#6699cc",
-    "United States": "#cc66cc",
-    "Italy": "#00ff00",
-    "Germany": "#804000",
-    "Turkey": "#808080",
-    "France": "#0000ff",
-    "None": "#b9b9b9",
-}
-
 Colors = {
     # European / Northwest Eurasian
     "Franco": "#008db5",
@@ -210,7 +195,6 @@ Colors = {
     "Other": "#3c463f",
     # Map
     # "Country Border": "#0f1719",
-    "": "#",
     }
 
 def filter_image(input_path, output_path, allowed_colors):
@@ -234,7 +218,7 @@ def filter_image(input_path, output_path, allowed_colors):
     # Save the new image
     image.save(output_path, "PNG")
 
-filter_image("ina.png", "ina1.png", Ina)
+filter_image("old-map.png", "filtered_map.png", Colors)
 
 
 
