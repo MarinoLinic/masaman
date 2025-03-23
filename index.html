@@ -200,19 +200,29 @@
 		Other: '#3c463f',
 	}
 
-	// Convert RGB to a hex string
+	// Convert RGB to Hex
 	function rgbToHex(r, g, b) {
-		return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`
+		return (
+			'#' +
+			[r, g, b]
+				.map((x) => x.toString(16).padStart(2, '0')) // Convert to hex and ensure 2 digits
+				.join('')
+		)
 	}
 
-	// Convert RGB to color name (or hex if not found)
+	// Find color name from RGB
 	function rgbToNameOrHex(r, g, b) {
-		const key = `${r},${g},${b}`
-		return colorNames[key] || rgbToHex(r, g, b)
+		const hex = rgbToHex(r, g, b)
+		for (const [name, colorHex] of Object.entries(colorNames)) {
+			if (colorHex.toLowerCase() === hex.toLowerCase()) {
+				return name // Return the color name if found
+			}
+		}
+		return hex // Otherwise, return the hex code
 	}
 
-	// Get color on hover
-	canvas.addEventListener('mousemove', function (event) {
+	// Get color on click
+	canvas.addEventListener('click', function (event) {
 		const rect = canvas.getBoundingClientRect()
 		const x = event.clientX - rect.left
 		const y = event.clientY - rect.top
@@ -222,6 +232,21 @@
 			g = pixel[1],
 			b = pixel[2]
 
-		colorText.textContent = `Color: ${rgbToNameOrHex(r, g, b)}`
+		const tooltip = document.createElement('div')
+		tooltip.textContent = rgbToNameOrHex(r, g, b)
+		Object.assign(tooltip.style, {
+			position: 'absolute',
+			left: `${event.pageX + 5}px`,
+			top: `${event.pageY + 5}px`,
+			background: 'black',
+			color: 'white',
+			padding: '4px 8px',
+			borderRadius: '4px',
+			fontSize: '12px',
+			pointerEvents: 'none',
+		})
+
+		document.body.appendChild(tooltip)
+		setTimeout(() => tooltip.remove(), 1500) // Auto-remove after 1.5 sec
 	})
 </script>
