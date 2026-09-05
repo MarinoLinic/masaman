@@ -1,252 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ethnicity Map Viewer</title>
+<style>
+	body {
+		margin: 0;
+		background: #ffffff;
+		overflow: hidden;
+		font-family: system-ui, sans-serif;
+	}
+	#mapCanvas { display: block; cursor: crosshair; }
+	#tooltip, .pin {
+		position: fixed;
+		background: rgba(20, 20, 20, 0.9);
+		color: #fff;
+		padding: 6px 10px;
+		border-radius: 6px;
+		font-size: 14px;
+		z-index: 9;
+		white-space: nowrap;
+	}
+	#tooltip { pointer-events: none; display: none; z-index: 10; }
+	.swatch {
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		border-radius: 3px;
+		margin-right: 6px;
+		vertical-align: -1px;
+		outline: 1px solid #fff3;
+	}
+	.close {
+		position: absolute;
+		top: -7px;
+		right: -7px;
+		width: 18px;
+		height: 18px;
+		border: none;
+		border-radius: 50%;
+		background: #444;
+		color: #fff;
+		font-size: 12px;
+		line-height: 18px;
+		padding: 0;
+		cursor: pointer;
+	}
+	.close:hover { background: #c0392b; }
+	#hint {
+		position: fixed;
+		bottom: 10px;
+		left: 10px;
+		color: #999;
+		font-size: 12px;
+		z-index: 10;
+		user-select: none;
+	}
+</style>
+</head>
+<body>
 <canvas id="mapCanvas"></canvas>
-<p id="colorText">Hover over the image to see colors.</p>
+<div id="tooltip"></div>
+<div id="hint">Hover to identify · Scroll to zoom · Drag to pan · Click to pin a label · Esc clears all pins</div>
 
 <script>
-	const canvas = document.getElementById('mapCanvas')
-	const ctx = canvas.getContext('2d')
-	const colorText = document.getElementById('colorText')
+const colorNames = {
+	'Franco': '#008db5', 'Iberian': '#00a7d7', 'Italic': '#008695',
+	'Sardinian': '#9c97ff', 'Rhaetian': '#00a0b3', 'Romanian': '#00717d',
+	'Canarian': '#4b0ae7', 'Criollo': '#9dc5ff', 'Hispano-Caribbean (West)': '#6ba5ff',
+	'Luso-Brazilian': '#62a0ff', 'West Slavic': '#9de9ff', 'East Slavic': '#6cdeff',
+	'South Slavic': '#84e3ff', 'Baltic': '#007293', 'Anglo': '#62efff',
+	'Germanic': '#00daf2', 'Scandinavian': '#00c5db', 'Afrikaner': '#00b8cc',
+	'Mormon': '#9df5ff', 'Celtic': '#034b9f', 'Falklander': '#0a99cf',
+	'Albanian': '#3184ff', 'Greek': '#3c31ff', 'Gagauz': '#0c00f0',
+	'Maltese': '#0b00ce', 'Basque': '#0900a4', 'Hungarian': '#7c78da',
+	'Finnic': '#070095', 'Sami': '#4a43d4',
+	'Gujarati': '#ea73ff', 'Hindustani': '#e655ff', 'Marathi': '#e02fff',
+	'Northeast Indic': '#db0fff', 'Nepali': '#af00ce', 'Northwest Indic': '#cc00f0',
+	'Sinhalese': '#88009f', 'Indo South African': '#f700a0', 'Indo-Caribbean': '#ff64c9',
+	'Indo-Fijian': '#ff0fab', 'Dardic': '#f69e80', 'Burusho': '#ff73f4',
+	'Nuristani': '#f79954', 'Munda': '#86007c', 'Dravidian': '#ff20ee',
+	'Brahui': '#e800d7', 'Moor': '#dd3b4c', 'Vedda': '#ae00a2',
+	'Adivasi': '#380035', 'South Arabian': '#ff807a', 'Romani': '#ffb7fa',
+	'Domari': '#ff79f5', 'Kholosi': '#ff59f2',
+	'Arabian': '#ff781e', 'Egyptian': '#ff8635', 'Maghrebi': '#ff954f',
+	'Levantine': '#ff9e5e', 'Druze': '#ffaa71', 'Maronite': '#ffb786',
+	'Syriac': '#ffc199', 'Melkite': '#ffd1b3', 'Ashkenazi': '#fd6500',
+	'Sephardi': '#e65b00', 'Mizrahi': '#d05300', 'Israeli': '#bf4d00',
+	'Berber': '#ffd399', 'Tuareg': '#ffcb84', 'Siwa': '#ffe1b9',
+	'Coptic': '#ffbf68', 'Persian': '#ffae40', 'Ossetian': '#ffa62d',
+	'Parsi': '#ff9a11', 'Western Iranic': '#df8a16', 'Eastern Iranic': '#ee9216',
+	'Caspian': '#cd7f16', 'Turkic': '#f8ba76', 'Kipchak': '#edc344',
+	'Kouloughi': '#deb36f', 'Caucasian': '#f59932', 'Georgian': '#f48b17',
+	'Armenian': '#d9770b', 'Sudanese': '#ef9d5e', 'Mauritanian': '#eb9652',
+	'Japonic': '#fffbc4', 'Korean': '#fff89b', 'Mongolic': '#fff57d',
+	'Tuvan': '#fff364', 'Manchurian': '#efe143', 'Turanid': '#d7c700',
+	'Hazara': '#e1d000', 'Northern Han': '#ffed20', 'Southern Han': '#fbe800',
+	'Southeast Asian Han': '#ffef2b', 'Hui': '#ecda00', 'Yakut': '#c8b900',
+	'Chukotko': '#b9ab00', 'Tungusic': '#ac9f00', 'Ainu': '#a29600',
+	'Bolgar': '#fbce46', 'Volgaic': '#e6c537', 'Samoyedic': '#dcc22d',
+	'Vietic': '#f9ffc4', 'Mon-Khmer': '#f4ff93', 'Khasi': '#f0ff6f',
+	'Formosan': '#e9ff20', 'Philippine': '#ebff39', 'Malayan': '#eeff55',
+	'Tibetic': '#e1e41b', 'Burmic': '#d9db1b', 'Tai Kadai': '#e1fb00',
+	'Hmong-Mien': '#9eb000',
+	'Beja': '#a6ff39', 'Cushitic': '#c7ff82', 'Habesha': '#99d44c',
+	'Omotic': '#9aff1e', 'Beta Israel': '#88f700', 'Chadic': '#a8ec53',
+	'Nilotic': '#2d5100', 'Maasai': '#396800', 'Nubian': '#447b00',
+	'Sudanic': '#4f8e00', 'Western Nigritic': '#5eaa00', 'Eastern Nigritic': '#68bd00',
+	'Banda': '#3de80c', 'Bantu': '#06ff1a', 'Lemba': '#a5dc64',
+	'Khoi': '#acffb3', 'San': '#8eff97', 'Hadze': '#68ff74',
+	'Sandawe': '#53ff60', 'Pygmy': '#72c48b', 'Anglo-Caribbean': '#00f018',
+	'Dutch-Caribbean': '#00d915', 'Hispanic-Caribbean': '#00cc14', 'Franco-Caribbean': '#00c113',
+	'Gullah': '#00b512', 'Maroon': '#00aa11', 'Black American': '#009b10',
+	'Krio': '#00770c', 'Afro-Hispanic': '#15ff62', 'Afro-Brazilian': '#00f750',
+	'Swahili': '#007d28', 'Zanj': '#00dd48', 'Afro-Mascarene': '#096f24',
+	'Eskimo-Aleut': '#ffaaaa', 'Na-Dene': '#ff8888', 'Plains': '#ff3e3e',
+	'Meso': '#ff0d0d', 'Mayan': '#e80000', 'Chibchan': '#c60000',
+	'Amazonian': '#9d0000', 'Andean': '#f1525a', 'Patagonian': '#ed252f',
+	'Fuegian': '#ab3137',
+	'Papuan': '#817334', 'Aborigine': '#b4704b', 'Negrito': '#9c6141',
+	'Aslian': '#835136', 'Andamanese': '#6d442e', 'Micronesian': '#a79645',
+	'Polynesian': '#bbaa59', 'Moluccan': '#cea48c', 'Melanesian': '#be8465',
+	'African Creole': '#97aa95', 'Asian Creole': '#b8b98e', 'Pacific Creole': '#aba894',
+	'Louisiana Creole': '#5ca771', 'Castizo': '#afbed5', 'Northern Mestizo': '#879b99',
+	'Southern Mestizo': '#9ca2a7', 'Paraguayan Mestizo': '#7e7871', 'Fiegian Mestizo': '#8a6f6c',
+	'Metis': '#7f9793', 'Dane-Inuit': '#bec1c5', 'Pardo': '#70877f',
+	'Montubio': '#78a494', 'Papiamento': '#4e7a61', 'Hispano-Zambo': '#947070',
+	'Anglo-Zambo': '#886666', 'Dougla': '#927283', 'Malagasy': '#849146',
+	'Other': '#3c463f',
+}
 
-	// Load the image
-	const img = new Image()
-	img.src = 'filtered_map.png' // Replace with your actual image path
-	img.onload = function () {
-		canvas.width = img.width
-		canvas.height = img.height
-		ctx.drawImage(img, 0, 0)
+// Exact-match lookup: hex -> name
+const hexToName = {}
+for (const [name, hex] of Object.entries(colorNames)) hexToName[hex.toLowerCase()] = name
+
+// Nearest-match fallback for ±1 shading variants (e.g. legend patches)
+const colorEntries = Object.entries(colorNames).map(([name, hex]) => {
+	const n = parseInt(hex.slice(1), 16)
+	return { name, r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
+})
+const MAX_DIST_SQ = 32 * 32 // tolerance in RGB space
+function nearestName(r, g, b) {
+	let best = null, bestD = MAX_DIST_SQ
+	for (const c of colorEntries) {
+		const d = (r - c.r) ** 2 + (g - c.g) ** 2 + (b - c.b) ** 2
+		if (d < bestD) { bestD = d; best = c.name }
 	}
+	return best
+}
 
-	// Color name dictionary (extend as needed)
-	const colorNames = {
-		Franco: '#008db5',
-		Iberian: '#00a7d7',
-		Italic: '#008695',
-		Sardinian: '#9c97ff',
-		Rhaetian: '#00a0b3',
-		Romanian: '#00717d',
-		Canarian: '#4b0ae7',
-		Criollo: '#9dc5ff',
-		'Hispano-Caribbean (West)': '#6ba5ff',
-		'Luso-Brazilian': '#62a0ff',
-		'West Slavic': '#9de9ff',
-		'East Slavic': '#6cdeff',
-		'South Slavic': '#84e3ff',
-		Baltic: '#007293',
-		Anglo: '#62efff',
-		Germanic: '#00daf2',
-		Scandinavian: '#00c5db',
-		Afrikaner: '#00b8cc',
-		Mormon: '#9df5ff',
-		Celtic: '#034b9f',
-		Falklander: '#0a99cf',
-		Albanian: '#3184ff',
-		Greek: '#3c31ff',
-		Gagauz: '#0c00f0',
-		Maltese: '#0b00ce',
-		Basque: '#0900a4',
-		Hungarian: '#7c78da',
-		Finnic: '#070095',
-		Sami: '#4a43d4',
-		Gujarati: '#ea73ff',
-		Hindustani: '#e655ff',
-		Marathi: '#e02fff',
-		'Northeast Indic': '#db0fff',
-		Nepali: '#af00ce',
-		'Northwest Indic': '#cc00f0',
-		Sinhalese: '#88009f',
-		'Indo South African': '#f700a0',
-		'Indo-Caribbean': '#ff64c9',
-		'Indo-Fijian': '#ff0fab',
-		Dardic: '#f69e80',
-		Burusho: '#ff73f4',
-		Nuristani: '#f79954',
-		Munda: '#86007c',
-		Dravidian: '#ff20ee',
-		Brahui: '#e800d7',
-		Moor: '#dd3b4c',
-		Vedda: '#ae00a2',
-		Adivasi: '#380035',
-		'South Arabian': '#ff807a',
-		Romani: '#ffb7fa',
-		Domari: '#ff79f5',
-		Kholosi: '#ff59f2',
-		Arabian: '#ff781e',
-		Egyptian: '#ff8635',
-		Maghrebi: '#ff954f',
-		Levantine: '#ff9e5e',
-		Druze: '#ffaa71',
-		Maronite: '#ffb786',
-		Syriac: '#ffc199',
-		Melkite: '#ffd1b3',
-		Ashkenazi: '#fd6500',
-		Sephardi: '#e65b00',
-		Mizrahi: '#d05300',
-		Israeli: '#bf4d00',
-		Berber: '#ffd399',
-		Tuareg: '#ffcb84',
-		Siwa: '#ffe1b9',
-		Coptic: '#ffbf68',
-		Persian: '#ffae40',
-		Ossetian: '#ffa62d',
-		Parsi: '#ff9a11',
-		'Western Iranic': '#df8a16',
-		'Eastern Iranic': '#ee9216',
-		Caspian: '#cd7f16',
-		Turkic: '#f8ba76',
-		Kipchak: '#edc344',
-		Kouloughi: '#deb36f',
-		Caucasian: '#f59932',
-		Georgian: '#f48b17',
-		Armenian: '#d9770b',
-		Sudanese: '#ef9d5e',
-		Mauritanian: '#eb9652',
-		Japonic: '#fffbc4',
-		Korean: '#fff89b',
-		Mongolic: '#fff57d',
-		Tuvan: '#fff364',
-		Manchurian: '#efe143',
-		Turanid: '#d7c700',
-		Hazara: '#e1d000',
-		'Northern Han': '#ffed20',
-		'Southern Han': '#fbe800',
-		'Southeast Asian Han': '#ffef2b',
-		Hui: '#ecda00',
-		Yakut: '#c8b900',
-		Chukotko: '#b9ab00',
-		Tungusic: '#ac9f00',
-		Ainu: '#a29600',
-		Bolgar: '#fbce46',
-		Volgaic: '#e6c537',
-		Samoyedic: '#dcc22d',
-		Vietic: '#f9ffc4',
-		'Mon-Khmer': '#f4ff93',
-		Khasi: '#f0ff6f',
-		Formosan: '#e9ff20',
-		Philippine: '#ebff39',
-		Malayan: '#eeff55',
-		Tibetic: '#e1e41b',
-		Burmic: '#d9db1b',
-		'Tai Kadai': '#e1fb00',
-		'Hmong-Mien': '#9eb000',
-		Beja: '#a6ff39',
-		Cushitic: '#c7ff82',
-		Habesha: '#99d44c',
-		Omotic: '#9aff1e',
-		'Beta Israel': '#88f700',
-		Chadic: '#a8ec53',
-		Nilotic: '#2d5100',
-		Maasai: '#396800',
-		Nubian: '#447b00',
-		Sudanic: '#4f8e00',
-		'Western Nigritic': '#5eaa00',
-		'Eastern Nigritic': '#68bd00',
-		Banda: '#3de80c',
-		Bantu: '#06ff1a',
-		Lemba: '#a5dc64',
-		Khoi: '#acffb3',
-		San: '#8eff97',
-		Hadze: '#68ff74',
-		Sandawe: '#53ff60',
-		Pygmy: '#72c48b',
-		'Anglo-Caribbean': '#00f018',
-		'Dutch-Caribbean': '#00d915',
-		'Hispanic-Caribbean': '#00cc14',
-		'Franco-Caribbean': '#00c113',
-		Gullah: '#00b512',
-		Maroon: '#00aa11',
-		'Black American': '#009b10',
-		Krio: '#00770c',
-		'Afro-Hispanic': '#15ff62',
-		'Afro-Brazilian': '#00f750',
-		Swahili: '#007d28',
-		Zanj: '#00dd48',
-		'Afro-Mascarene': '#096f24',
-		'Eskimo-Aleut': '#ffaaaa',
-		'Na-Dene': '#ff8888',
-		Plains: '#ff3e3e',
-		Meso: '#ff0d0d',
-		Mayan: '#e80000',
-		Chibchan: '#c60000',
-		Amazonian: '#9d0000',
-		Andean: '#f1525a',
-		Patagonian: '#ed252f',
-		Fuegian: '#ab3137',
-		Papuan: '#817334',
-		Aborigine: '#b4704b',
-		Negrito: '#9c6141',
-		Aslian: '#835136',
-		Andamanese: '#6d442e',
-		Micronesian: '#a79645',
-		Polynesian: '#bbaa59',
-		Moluccan: '#cea48c',
-		Melanesian: '#be8465',
-		'African Creole': '#97aa95',
-		'Asian Creole': '#b8b98e',
-		'Pacific Creole': '#aba894',
-		'Louisiana Creole': '#5ca771',
-		Castizo: '#afbed5',
-		'Northern Mestizo': '#879b99',
-		'Southern Mestizo': '#9ca2a7',
-		'Paraguayan Mestizo': '#7e7871',
-		'Fiegian Mestizo': '#8a6f6c',
-		Metis: '#7f9793',
-		'Dane-Inuit': '#bec1c5',
-		Pardo: '#70877f',
-		Montubio: '#78a494',
-		Papiamento: '#4e7a61',
-		'Hispano-Zambo': '#947070',
-		'Anglo-Zambo': '#886666',
-		Dougla: '#927283',
-		Malagasy: '#849146',
-		Other: '#3c463f',
+const canvas = document.getElementById('mapCanvas')
+const ctx = canvas.getContext('2d')
+const tooltip = document.getElementById('tooltip')
+
+addEventListener('keydown', (e) => {
+	if (e.key === 'Escape') clearPins()
+})
+
+let scale = 1, ox = 0, oy = 0
+let img = null
+
+// Hidden full-res canvas used only for pixel reads
+const readCanvas = document.createElement('canvas')
+const readCtx = readCanvas.getContext('2d', { willReadFrequently: true })
+
+const image = new Image()
+image.src = 'filtered_map.png'
+image.onload = () => {
+	img = image
+	readCanvas.width = image.width
+	readCanvas.height = image.height
+	readCtx.drawImage(image, 0, 0)
+	canvas.width = innerWidth
+	canvas.height = innerHeight
+	fitMap()
+	draw()
+}
+
+addEventListener('resize', () => {
+	canvas.width = innerWidth
+	canvas.height = innerHeight
+	draw()
+})
+
+function fitMap() {
+	scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.98
+	ox = (canvas.width - img.width * scale) / 2
+	oy = (canvas.height - img.height * scale) / 2
+}
+
+function draw() {
+	ctx.fillStyle = '#ffffff'
+	ctx.fillRect(0, 0, canvas.width, canvas.height)
+	ctx.imageSmoothingEnabled = false
+	// Only blit the visible source region instead of the whole 13k x 6k map
+	const sx = Math.max(0, -ox / scale)
+	const sy = Math.max(0, -oy / scale)
+	const sw = Math.min(img.width - sx, canvas.width / scale)
+	const sh = Math.min(img.height - sy, canvas.height / scale)
+	if (sw > 0 && sh > 0) {
+		ctx.drawImage(img,
+			sx, sy, sw, sh,
+			Math.round(ox + sx * scale), Math.round(oy + sy * scale),
+			Math.round(sw * scale) + 1, Math.round(sh * scale) + 1)
 	}
+	placePins()
+}
 
-	// Convert RGB to Hex
-	function rgbToHex(r, g, b) {
-		return (
-			'#' +
-			[r, g, b]
-				.map((x) => x.toString(16).padStart(2, '0')) // Convert to hex and ensure 2 digits
-				.join('')
-		)
-	}
-
-	// Find color name from RGB
-	function rgbToNameOrHex(r, g, b) {
-		const hex = rgbToHex(r, g, b)
-		for (const [name, colorHex] of Object.entries(colorNames)) {
-			if (colorHex.toLowerCase() === hex.toLowerCase()) {
-				return name // Return the color name if found
-			}
+// --- Pins: stored in map coordinates so they track pan/zoom ---
+const pins = []
+function placePins() {
+	if (!img) return
+	for (const p of pins) {
+		const px = ox + p.x * scale, py = oy + p.y * scale
+		if (px < -300 || py < -50 || px > canvas.width || py > canvas.height) {
+			p.el.style.display = 'none'
+		} else {
+			p.el.style.display = 'block'
+			p.el.style.left = px + 8 + 'px'
+			p.el.style.top = py + 8 + 'px'
 		}
-		return hex // Otherwise, return the hex code
 	}
+}
 
-	// Get color on click
-	canvas.addEventListener('click', function (event) {
-		const rect = canvas.getBoundingClientRect()
-		const x = event.clientX - rect.left
-		const y = event.clientY - rect.top
+function toImageCoords(e) {
+	return {
+		x: Math.floor((e.clientX - ox) / scale),
+		y: Math.floor((e.clientY - oy) / scale),
+	}
+}
 
-		const pixel = ctx.getImageData(x, y, 1, 1).data
-		const r = pixel[0],
-			g = pixel[1],
-			b = pixel[2]
+function lookup(x, y) {
+	if (!img || x < 0 || y < 0 || x >= img.width || y >= img.height) return null
+	const [r, g, b, a] = readCtx.getImageData(x, y, 1, 1).data
+	if (a < 128) return null
+	const hex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')
+	const name = hexToName[hex.toLowerCase()] ?? nearestName(r, g, b)
+	return { hex, name: name || hex }
+}
 
-		const tooltip = document.createElement('div')
-		tooltip.textContent = rgbToNameOrHex(r, g, b)
-		Object.assign(tooltip.style, {
-			position: 'absolute',
-			left: `${event.pageX + 5}px`,
-			top: `${event.pageY + 5}px`,
-			background: 'black',
-			color: 'white',
-			padding: '4px 8px',
-			borderRadius: '4px',
-			fontSize: '12px',
-			pointerEvents: 'none',
-		})
+function labelHtml(info) {
+	return `<span class="swatch" style="background:${info.hex}"></span>${info.name}`
+}
 
-		document.body.appendChild(tooltip)
-		setTimeout(() => tooltip.remove(), 1500) // Auto-remove after 1.5 sec
-	})
+// --- Hover tooltip (hide while panning) ---
+canvas.addEventListener('mousemove', (e) => {
+	if (dragging) return
+	const { x, y } = toImageCoords(e)
+	const info = lookup(x, y)
+	if (info) {
+		tooltip.innerHTML = labelHtml(info)
+		tooltip.style.display = 'block'
+		tooltip.style.left = e.clientX + 14 + 'px'
+		tooltip.style.top = e.clientY + 14 + 'px'
+		canvas.style.cursor = 'pointer'
+	} else {
+		tooltip.style.display = 'none'
+		canvas.style.cursor = 'crosshair'
+	}
+})
+canvas.addEventListener('mouseleave', () => tooltip.style.display = 'none')
+
+// --- Click to pin a label ---
+canvas.addEventListener('click', (e) => {
+	if (moved) return
+	const { x, y } = toImageCoords(e)
+	const info = lookup(x, y)
+	if (!info) return
+	addPin(x, y, info)
+})
+
+function addPin(x, y, info) {
+	const el = document.createElement('div')
+	el.className = 'pin'
+	el.innerHTML = labelHtml(info)
+
+	const close = document.createElement('button')
+	close.className = 'close'
+	close.textContent = '×'
+	close.title = 'Remove'
+	close.onclick = (ev) => {
+		ev.stopPropagation()
+		const i = pins.findIndex(p => p.el === el)
+		if (i !== -1) pins.splice(i, 1)
+		el.remove()
+	}
+	el.appendChild(close)
+
+	el.addEventListener('mousedown', e => e.stopPropagation())
+	document.body.appendChild(el)
+	const pin = { x, y, el }
+	pins.push(pin)
+	placePins()
+}
+
+function clearPins() {
+	for (const p of pins) p.el.remove()
+	pins.length = 0
+}
+
+// --- Zoom to cursor ---
+canvas.addEventListener('wheel', (e) => {
+	e.preventDefault()
+	const newScale = Math.min(40, Math.max(0.05, scale * (e.deltaY < 0 ? 1.25 : 0.8)))
+	ox = e.clientX - (e.clientX - ox) * (newScale / scale)
+	oy = e.clientY - (e.clientY - oy) * (newScale / scale)
+	scale = newScale
+	draw()
+}, { passive: false })
+
+// --- Drag to pan ---
+let dragging = false, moved = false, lastX, lastY
+canvas.addEventListener('mousedown', (e) => {
+	dragging = true; moved = false
+	lastX = e.clientX; lastY = e.clientY
+	tooltip.style.display = 'none'
+})
+addEventListener('mousemove', (e) => {
+	if (!dragging) return
+	const dx = e.clientX - lastX, dy = e.clientY - lastY
+	if (Math.abs(dx) + Math.abs(dy) > 2) moved = true
+	ox += dx; oy += dy
+	lastX = e.clientX; lastY = e.clientY
+	draw()
+})
+addEventListener('mouseup', () => dragging = false)
 </script>
+</body>
+</html>
