@@ -1,0 +1,785 @@
+{
+  "title": "World ethnicity map",
+  "credit": "Mason S. (Masaman), 2018–2019",
+  "image": "masaman-map.png",
+  "key": "masaman-key.png",
+  "original": "../old-map.png",
+  "legend": [
+    {
+      "name": "Southern Eurasian",
+      "entries": [
+        {
+          "label": "Gujarati",
+          "color": "#ea73ff"
+        },
+        {
+          "label": "Hindustani",
+          "color": "#e655ff"
+        },
+        {
+          "label": "Marathi",
+          "color": "#e02fff"
+        },
+        {
+          "label": "Northeast Indic",
+          "color": "#db0fff"
+        },
+        {
+          "label": "Nepali",
+          "color": "#af00ce"
+        },
+        {
+          "label": "Northwest Indic",
+          "color": "#cc00f0"
+        },
+        {
+          "label": "Sinhalese",
+          "color": "#88009f"
+        },
+        {
+          "label": "Indo-South African",
+          "color": "#f700a0"
+        },
+        {
+          "label": "Indo-Caribbean",
+          "color": "#ff64c9"
+        },
+        {
+          "label": "Indo-Fijian",
+          "color": "#ff0fab"
+        },
+        {
+          "label": "Dardic",
+          "color": "#f69e80"
+        },
+        {
+          "label": "Burusho",
+          "color": "#ff73f4"
+        },
+        {
+          "label": "Nuristani",
+          "color": "#f79954"
+        },
+        {
+          "label": "Munda",
+          "color": "#86007c"
+        },
+        {
+          "label": "Dravidian",
+          "color": "#ff20ee"
+        },
+        {
+          "label": "Brahui",
+          "color": "#e800d7"
+        },
+        {
+          "label": "Moor",
+          "color": "#dd3b4c"
+        },
+        {
+          "label": "Vedda",
+          "color": "#ae00a2"
+        },
+        {
+          "label": "Adivasi",
+          "color": "#380035"
+        },
+        {
+          "label": "South Arabian",
+          "color": "#ff807a"
+        },
+        {
+          "label": "Romani",
+          "color": "#ffb7fa"
+        },
+        {
+          "label": "Domari",
+          "color": "#ff79f5"
+        },
+        {
+          "label": "Kholosi",
+          "color": "#ff59f2"
+        }
+      ]
+    },
+    {
+      "name": "Northwest Eurasian",
+      "entries": [
+        {
+          "label": "Franco",
+          "color": "#008db5"
+        },
+        {
+          "label": "Italic",
+          "color": "#008695"
+        },
+        {
+          "label": "Iberian",
+          "color": "#00a7d7"
+        },
+        {
+          "label": "Sardinian",
+          "color": "#9c97ff"
+        },
+        {
+          "label": "Rhaetian",
+          "color": "#00a0b3"
+        },
+        {
+          "label": "Romanian",
+          "color": "#00717d"
+        },
+        {
+          "label": "Canarian",
+          "color": "#4b0ae7"
+        },
+        {
+          "label": "Criollo",
+          "color": "#9dc5ff"
+        },
+        {
+          "label": "Hispano-Caribbean (West)",
+          "color": "#6ba5ff"
+        },
+        {
+          "label": "Luso-Brazilian",
+          "color": "#62a0ff"
+        },
+        {
+          "label": "West Slavic",
+          "color": "#9de9ff"
+        },
+        {
+          "label": "East Slavic",
+          "color": "#6cdeff"
+        },
+        {
+          "label": "South Slavic",
+          "color": "#84e3ff"
+        },
+        {
+          "label": "Baltic",
+          "color": "#007293"
+        },
+        {
+          "label": "Anglo",
+          "color": "#62efff"
+        },
+        {
+          "label": "Germanic",
+          "color": "#00daf2"
+        },
+        {
+          "label": "Scandinavian",
+          "color": "#00c5db"
+        },
+        {
+          "label": "Afrikaner",
+          "color": "#00b8cc"
+        },
+        {
+          "label": "Mormon",
+          "color": "#9df5ff"
+        },
+        {
+          "label": "Celtic",
+          "color": "#034b9f"
+        },
+        {
+          "label": "Falklander",
+          "color": "#0a99cf"
+        },
+        {
+          "label": "Albanian",
+          "color": "#3184ff"
+        },
+        {
+          "label": "Greek",
+          "color": "#3c31ff"
+        },
+        {
+          "label": "Gagauz",
+          "color": "#0c00f0"
+        },
+        {
+          "label": "Maltese",
+          "color": "#0b00ce"
+        },
+        {
+          "label": "Basque",
+          "color": "#0900a4"
+        },
+        {
+          "label": "Hungarian",
+          "color": "#7c78da"
+        },
+        {
+          "label": "Finnic",
+          "color": "#070095"
+        },
+        {
+          "label": "Sami",
+          "color": "#4a43d4"
+        }
+      ]
+    },
+    {
+      "name": "Southwest Eurasian",
+      "entries": [
+        {
+          "label": "Arabian",
+          "color": "#ff781e"
+        },
+        {
+          "label": "Egyptian",
+          "color": "#ff8635"
+        },
+        {
+          "label": "Maghrebi",
+          "color": "#ff954f"
+        },
+        {
+          "label": "Levantine",
+          "color": "#ff9e5e"
+        },
+        {
+          "label": "Druze",
+          "color": "#ffaa71"
+        },
+        {
+          "label": "Maronite",
+          "color": "#ffb786"
+        },
+        {
+          "label": "Syriac",
+          "color": "#ffc199"
+        },
+        {
+          "label": "Melkite",
+          "color": "#ffd1b3"
+        },
+        {
+          "label": "Ashkenazi",
+          "color": "#fd6500"
+        },
+        {
+          "label": "Sephardi",
+          "color": "#e65b00"
+        },
+        {
+          "label": "Mizrahi",
+          "color": "#d05300"
+        },
+        {
+          "label": "Israeli",
+          "color": "#bf4d00"
+        },
+        {
+          "label": "Berber",
+          "color": "#ffd399"
+        },
+        {
+          "label": "Tuareg",
+          "color": "#ffcb84"
+        },
+        {
+          "label": "Siwa",
+          "color": "#ffe1b9"
+        },
+        {
+          "label": "Coptic",
+          "color": "#ffbf68"
+        },
+        {
+          "label": "Persian",
+          "color": "#ffae40"
+        },
+        {
+          "label": "Ossetian",
+          "color": "#ffa62d"
+        },
+        {
+          "label": "Parsi",
+          "color": "#ff9a11"
+        },
+        {
+          "label": "Western Iranic",
+          "color": "#df8a16"
+        },
+        {
+          "label": "Eastern Iranic",
+          "color": "#ee9216"
+        },
+        {
+          "label": "Caspian",
+          "color": "#cd7f16"
+        },
+        {
+          "label": "Turkic",
+          "color": "#f8ba76"
+        },
+        {
+          "label": "Kipchak",
+          "color": "#edc344"
+        },
+        {
+          "label": "Kouloughli",
+          "color": "#deb36f"
+        },
+        {
+          "label": "Caucasian",
+          "color": "#f59932"
+        },
+        {
+          "label": "Georgian",
+          "color": "#f48b17"
+        },
+        {
+          "label": "Armenian",
+          "color": "#d9770b"
+        },
+        {
+          "label": "Sudanese",
+          "color": "#ef9d5e"
+        },
+        {
+          "label": "Mauritanian",
+          "color": "#eb9652"
+        }
+      ]
+    },
+    {
+      "name": "Eastern Eurasian",
+      "entries": [
+        {
+          "label": "Japonic",
+          "color": "#fffbc4"
+        },
+        {
+          "label": "Korean",
+          "color": "#fff89b"
+        },
+        {
+          "label": "Mongolic",
+          "color": "#fff57d"
+        },
+        {
+          "label": "Tuvan",
+          "color": "#fff364"
+        },
+        {
+          "label": "Manchurian",
+          "color": "#efe143"
+        },
+        {
+          "label": "Turanid",
+          "color": "#d7c700"
+        },
+        {
+          "label": "Hazara",
+          "color": "#e1d000"
+        },
+        {
+          "label": "Northern Han",
+          "color": "#ffed20"
+        },
+        {
+          "label": "Southern Han",
+          "color": "#fbe800"
+        },
+        {
+          "label": "Southeast Asian Han",
+          "color": "#ffef2b"
+        },
+        {
+          "label": "Hui",
+          "color": "#ecda00"
+        },
+        {
+          "label": "Yakut",
+          "color": "#c8b900"
+        },
+        {
+          "label": "Chukotko",
+          "color": "#b9ab00"
+        },
+        {
+          "label": "Tungusic",
+          "color": "#ac9f00"
+        },
+        {
+          "label": "Ainu",
+          "color": "#a29600"
+        },
+        {
+          "label": "Bolgar",
+          "color": "#fbce46"
+        },
+        {
+          "label": "Volgaic",
+          "color": "#e6c537"
+        },
+        {
+          "label": "Samoyedic",
+          "color": "#dcc22d"
+        },
+        {
+          "label": "Vietic",
+          "color": "#f9ffc4"
+        },
+        {
+          "label": "Mon-Khmer",
+          "color": "#f4ff93"
+        },
+        {
+          "label": "Khasi",
+          "color": "#f0ff6f"
+        },
+        {
+          "label": "Formosan",
+          "color": "#e9ff20"
+        },
+        {
+          "label": "Philippine",
+          "color": "#ebff39"
+        },
+        {
+          "label": "Malayan",
+          "color": "#eeff55"
+        },
+        {
+          "label": "Tibetic",
+          "color": "#e1e41b"
+        },
+        {
+          "label": "Burmic",
+          "color": "#d9db1b"
+        },
+        {
+          "label": "Tai-Kadai",
+          "color": "#e1fb00"
+        },
+        {
+          "label": "Hmong-Mien",
+          "color": "#9eb000"
+        }
+      ]
+    },
+    {
+      "name": "African",
+      "entries": [
+        {
+          "label": "Beja",
+          "color": "#a6ff39"
+        },
+        {
+          "label": "Cushitic",
+          "color": "#c7ff82"
+        },
+        {
+          "label": "Habesha",
+          "color": "#99d44c"
+        },
+        {
+          "label": "Omotic",
+          "color": "#9aff1e"
+        },
+        {
+          "label": "Beta Israel",
+          "color": "#88f700"
+        },
+        {
+          "label": "Chadic",
+          "color": "#a8ec53"
+        },
+        {
+          "label": "Nilotic",
+          "color": "#2d5100"
+        },
+        {
+          "label": "Maasai",
+          "color": "#396800"
+        },
+        {
+          "label": "Nubian",
+          "color": "#447b00"
+        },
+        {
+          "label": "Sudanic",
+          "color": "#4f8e00"
+        },
+        {
+          "label": "Western Nigritic",
+          "color": "#5eaa00"
+        },
+        {
+          "label": "Eastern Nigritic",
+          "color": "#68bd00"
+        },
+        {
+          "label": "Banda",
+          "color": "#3de80c"
+        },
+        {
+          "label": "Bantu",
+          "color": "#06ff1a"
+        },
+        {
+          "label": "Lemba",
+          "color": "#a5dc64"
+        },
+        {
+          "label": "Khoi",
+          "color": "#acffb3"
+        },
+        {
+          "label": "San",
+          "color": "#8eff97"
+        },
+        {
+          "label": "Hadze",
+          "color": "#68ff74"
+        },
+        {
+          "label": "Sandawe",
+          "color": "#53ff60"
+        },
+        {
+          "label": "Pygmy",
+          "color": "#72c48b"
+        },
+        {
+          "label": "Anglo-Caribbean",
+          "color": "#00f018"
+        },
+        {
+          "label": "Dutch-Caribbean",
+          "color": "#00d915"
+        },
+        {
+          "label": "Hispanic-Caribbean",
+          "color": "#00cc14"
+        },
+        {
+          "label": "Franco-Caribbean",
+          "color": "#00c113"
+        },
+        {
+          "label": "Gullah",
+          "color": "#00b512"
+        },
+        {
+          "label": "Maroon",
+          "color": "#00aa11"
+        },
+        {
+          "label": "Black American",
+          "color": "#009b10"
+        },
+        {
+          "label": "Krio",
+          "color": "#00770c"
+        },
+        {
+          "label": "Afro-Hispanic",
+          "color": "#15ff62"
+        },
+        {
+          "label": "Afro-Brazilian",
+          "color": "#00f750"
+        },
+        {
+          "label": "Swahili",
+          "color": "#007d28"
+        },
+        {
+          "label": "Zanj",
+          "color": "#00dd48"
+        },
+        {
+          "label": "Afro-Mascarene",
+          "color": "#096f24"
+        }
+      ]
+    },
+    {
+      "name": "Amerindian",
+      "entries": [
+        {
+          "label": "Eskimo-Aleut",
+          "color": "#ffaaaa"
+        },
+        {
+          "label": "Na-Dene",
+          "color": "#ff8888"
+        },
+        {
+          "label": "Plains",
+          "color": "#ff3e3e"
+        },
+        {
+          "label": "Meso",
+          "color": "#ff0d0d"
+        },
+        {
+          "label": "Mayan",
+          "color": "#e80000"
+        },
+        {
+          "label": "Chibchan",
+          "color": "#c60000"
+        },
+        {
+          "label": "Amazonian",
+          "color": "#9d0000"
+        },
+        {
+          "label": "Andean",
+          "color": "#f1525a"
+        },
+        {
+          "label": "Patagonian",
+          "color": "#ed252f"
+        },
+        {
+          "label": "Fuegian",
+          "color": "#ab3137"
+        }
+      ]
+    },
+    {
+      "name": "Oceanian",
+      "entries": [
+        {
+          "label": "Papuan",
+          "color": "#817334"
+        },
+        {
+          "label": "Aborigine",
+          "color": "#b4704b"
+        },
+        {
+          "label": "Negrito",
+          "color": "#9c6141"
+        },
+        {
+          "label": "Aslian",
+          "color": "#835136"
+        },
+        {
+          "label": "Andamanese",
+          "color": "#6d442e"
+        },
+        {
+          "label": "Micronesian",
+          "color": "#a79645"
+        },
+        {
+          "label": "Polynesian",
+          "color": "#bbaa59"
+        },
+        {
+          "label": "Moluccan",
+          "color": "#cea48c"
+        },
+        {
+          "label": "Melanesian",
+          "color": "#be8465"
+        }
+      ]
+    },
+    {
+      "name": "Multiracial",
+      "entries": [
+        {
+          "label": "African Creole",
+          "color": "#97aa95"
+        },
+        {
+          "label": "Asian Creole",
+          "color": "#b8b98e"
+        },
+        {
+          "label": "Pacific Creole",
+          "color": "#aba894"
+        },
+        {
+          "label": "Louisiana Creole",
+          "color": "#5ca771"
+        },
+        {
+          "label": "Castizo",
+          "color": "#afbed5"
+        },
+        {
+          "label": "Northern Mestizo",
+          "color": "#879b99"
+        },
+        {
+          "label": "Southern Mestizo",
+          "color": "#9ca2a7"
+        },
+        {
+          "label": "Paraguayan Mestizo",
+          "color": "#7e7871"
+        },
+        {
+          "label": "Fuegian Mestizo",
+          "color": "#8a6f6c"
+        },
+        {
+          "label": "Metis",
+          "color": "#7f9793"
+        },
+        {
+          "label": "Dane-Inuit",
+          "color": "#bec1c5"
+        },
+        {
+          "label": "Hispano-Mulatto",
+          "color": "#536258"
+        },
+        {
+          "label": "Franco-Mulatto",
+          "color": "#46534a"
+        },
+        {
+          "label": "Anglo-Mulatto",
+          "color": "#555555"
+        },
+        {
+          "label": "Pardo",
+          "color": "#70877f"
+        },
+        {
+          "label": "Montubio",
+          "color": "#78a494"
+        },
+        {
+          "label": "Papiamento",
+          "color": "#4e7a61"
+        },
+        {
+          "label": "Hispano-Zambo",
+          "color": "#947070"
+        },
+        {
+          "label": "Anglo-Zambo",
+          "color": "#886666"
+        },
+        {
+          "label": "Dougla",
+          "color": "#927283"
+        },
+        {
+          "label": "Malagasy",
+          "color": "#849146"
+        },
+        {
+          "label": "Other",
+          "color": "#3c463f"
+        }
+      ]
+    }
+  ]
+}
